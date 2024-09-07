@@ -1,9 +1,9 @@
+# Use SCRATCH base image
+FROM scratch
+
 # Arguments that will be passed from the build command
 ARG GOOS
 ARG GOARCH
-
-# Use the distroless static-debian12 base image
-FROM gcr.io/distroless/static-debian12
 
 # Set the working directory
 WORKDIR /app
