@@ -3,7 +3,7 @@
 This is a simple prometheus exporter for the AirGradient air quality monitor. It uses the [AirGradient
 LocalServer API](https://github.com/airgradienthq/arduino/blob/master/docs/local-server.md) to get the data.
 
-*NOTE: Usage of LocalServer API requires the device to be running AirGradient firmware version 3.0.10 or later.*
+**NOTE: Usage of LocalServer API requires the device to be running AirGradient firmware version 3.0.10 or later.**
 
 ## Usage
 
@@ -11,6 +11,9 @@ Whether running as a container or manually, the exporter requires you to know th
 The `ENDPOINT` should can be easily obtained if you know the serial number of your AirGradient device. AirGradient
 devices use mDNS to easily discover the device on the network. The device can be accessed at
 `http://airgradient_<SERIAL>.local`. The `ENDPOINT` should be set to this URL.
+
+**NOTE: When running the exporter as a container, the `ENDPOINT` should be a static IP address or hostname that can be
+resolved by the container. The container does not have access to the mDNS service.**
 
 Once running, the exporter, by default, will expose the metrics at `:9091/metrics`.
 
@@ -26,7 +29,7 @@ airgradient-exporter:
   ports:
     - "9091:9091"
   environment:
-    - ENDPOINT=http://airgradient_<SERIAL>.local
+    - ENDPOINT=<ip of airgradient device>
 ```
 
 ### Running Locally
