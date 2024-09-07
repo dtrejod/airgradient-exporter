@@ -22,8 +22,9 @@ type measures struct {
 	NOXIndex        int     `json:"noxIndex"`
 	NOXRaw          int     `json:"noxRaw"`
 	Boot            int     `json:"boot"`
-	BootCount       int     `json:"bootCount"`
-	LEDMode         string  `json:"ledMode"`
-	Firmware        string  `json:"firmware"`
-	Model           string  `json:"model"`
+	// Deprecated: BootCount is deprecated in favor of Boot
+	BootCount int    `json:"bootCount"`
+	LEDMode   string `json:"ledMode"`
+	Firmware  string `json:"firmware"`
+	Model     string `json:"model"`
 }

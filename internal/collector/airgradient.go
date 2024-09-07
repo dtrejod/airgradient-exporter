@@ -122,13 +122,7 @@ func NewAirGradient(ctx context.Context, endpoint string) (prometheus.Collector,
 		),
 		bootDesc: prometheus.NewDesc(
 			"airgradient_boot",
-			"Counts every measurement cycle. Low boot counts indicate restarts",
-			[]string{"serialno"},
-			nil,
-		),
-		bootCountDesc: prometheus.NewDesc(
-			"airgradient_boot_count",
-			"Same as boot property. Required for Home Assistant compatability. Will be depreciated",
+			"The uptime of the device in minutes",
 			[]string{"serialno"},
 			nil,
 		),
@@ -157,7 +151,6 @@ type airgradientCollector struct {
 	noxIndexDesc        *prometheus.Desc
 	noxRawDesc          *prometheus.Desc
 	bootDesc            *prometheus.Desc
-	bootCountDesc       *prometheus.Desc
 }
 
 func (c *airgradientCollector) Describe(ch chan<- *prometheus.Desc) {
@@ -178,7 +171,6 @@ func (c *airgradientCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.noxIndexDesc
 	ch <- c.noxRawDesc
 	ch <- c.bootDesc
-	ch <- c.bootCountDesc
 }
 
 func (c *airgradientCollector) Collect(ch chan<- prometheus.Metric) {
@@ -205,7 +197,6 @@ func (c *airgradientCollector) Collect(ch chan<- prometheus.Metric) {
 	ch <- prometheus.MustNewConstMetric(c.noxIndexDesc, prometheus.GaugeValue, float64(m.NOXIndex), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.noxRawDesc, prometheus.GaugeValue, float64(m.NOXRaw), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.bootDesc, prometheus.GaugeValue, float64(m.Boot), m.SerialNo)
-	ch <- prometheus.MustNewConstMetric(c.bootCountDesc, prometheus.GaugeValue, float64(m.BootCount), m.SerialNo)
 }
 
 func (c *airgradientCollector) getMeasures(ctx context.Context) (*measures, error) {
