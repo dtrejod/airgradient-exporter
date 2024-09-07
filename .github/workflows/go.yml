@@ -85,7 +85,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
-        path: ./${{ github.event.repository.name }}-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
 
     - name: Release
       uses: softprops/action-gh-release@v1
