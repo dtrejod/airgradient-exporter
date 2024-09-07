@@ -29,7 +29,6 @@ airgradient-exporter:
     - ENDPOINT=http://airgradient_<SERIAL>.local
 ```
 
-
 ### Running Locally
 Run the exporter with the following command:
 
