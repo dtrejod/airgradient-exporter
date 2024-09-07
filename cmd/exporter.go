@@ -31,7 +31,7 @@ var exporterCmd = &cobra.Command{
 func exporterRunFunc(cmd *cobra.Command, args []string) {
 	airgradientCollector, err := collector.NewAirGradient(ctx, endpoint)
 	if err != nil {
-		ilog.FromContext(ctx).Fatal("Failed to create airgradient-collector.", zap.Error(err))
+		ilog.FromContext(ctx).Fatal("Failed to create airgradient-exporter.", zap.Error(err))
 		os.Exit(1)
 	}
 	if err := prometheus.Register(airgradientCollector); err != nil {
