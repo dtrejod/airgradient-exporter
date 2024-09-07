@@ -34,7 +34,7 @@ airgradient-exporter:
 Run the exporter with the following command:
 
 ```bash
-./airgradient_exporter exporter --endpoint http://airgradient_<SERIAL>.local
+./airgradient-exporter exporter --endpoint http://airgradient_<SERIAL>.local
 ```
 
 ## Development
@@ -45,6 +45,6 @@ To build the exporter locally, run the following command:
 go build
 ```
 
-The exporter will then be available as `airgradient_exporter`.
+The exporter will then be available as `airgradient-exporter`.
 
 
