@@ -14,17 +14,25 @@ RUN go build -v -ldflags="-X github.com/dtrejod/airgradient-exporter/version.ver
 # Use SCRATCH base image
 FROM scratch
 
+# Arguments that will be passed from the build command
+ARG VERSION=""
+
 # Set the working directory
 WORKDIR /app
 
 # Copy your binary into the image
 COPY --from=build /build/airgradient-exporter /app/airgradient-exporter
 
-# Set the ENDPOINT environment variable
+# Set the default values for user configurable environment variables
 ENV ENDPOINT=""
+ENV LISTEN_ADDRESS=":9091"
 
-# Command to run the exporter with the passed endpoint
-CMD ["/app/airgradient-exporter", "exporter", "--endpoint", "${ENDPOINT}"]
+# Expose the port
+EXPOSE 9091
+
+# Set entrypoint and command
+ENTRYPOINT ["/app/airgradient-exporter"]
+CMD ["exporter", "--endpoint", "${ENDPOINT}", "--listen-address", "${LISTEN_ADDRESS}"]
 
 # Add common labels
 LABEL org.opencontainers.image.title="AirGradient Exporter" \
