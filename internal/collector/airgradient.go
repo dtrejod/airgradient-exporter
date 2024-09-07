@@ -33,103 +33,103 @@ func NewAirGradient(ctx context.Context, endpoint string) (prometheus.Collector,
 		wifiDesc: prometheus.NewDesc(
 			"airgradient_wifi",
 			"WiFi signal strength",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		pm01Desc: prometheus.NewDesc(
 			"airgradient_pm01",
 			"PM1 in ug/m3",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		pm02Desc: prometheus.NewDesc(
 			"airgradient_pm02",
 			"PM2.5 in ug/m3",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		pm10Desc: prometheus.NewDesc(
 			"airgradient_pm10",
 			"PM10 in ug/m3",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		pm02CompensatedDesc: prometheus.NewDesc(
 			"airgradient_pm02_compensated",
 			"PM2.5 in ug/m3 with correction applied",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		rco2Desc: prometheus.NewDesc(
 			"airgradient_rco2",
 			"CO2 in ppm",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		pm003CountDesc: prometheus.NewDesc(
 			"airgradient_pm003_count",
 			"Particle count per dL",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		atmpDesc: prometheus.NewDesc(
 			"airgradient_atmp",
 			"Temperature in Degrees Celsius",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		atmpCompensatedDesc: prometheus.NewDesc(
 			"airgradient_atmp_compensated",
 			"Temperature in Degrees Celsius with correction applied",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		rhumDesc: prometheus.NewDesc(
 			"airgradient_rhum",
 			"Relative Humidity",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		rhumCompensatedDesc: prometheus.NewDesc(
 			"airgradient_rhum_compensated",
 			"Relative Humidity with correction applied",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		tvocIndexDesc: prometheus.NewDesc(
 			"airgradient_tvoc_index",
 			"Senisiron VOC Index",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		tvocRawDesc: prometheus.NewDesc(
 			"airgradient_tvoc_raw",
 			"VOC raw value",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		noxIndexDesc: prometheus.NewDesc(
 			"airgradient_nox_index",
 			"Senisirion NOx Index",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		noxRawDesc: prometheus.NewDesc(
 			"airgradient_nox_raw",
 			"NOx raw value",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		bootDesc: prometheus.NewDesc(
 			"airgradient_boot",
 			"Counts every measurement cycle. Low boot counts indicate restarts",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 		bootCountDesc: prometheus.NewDesc(
 			"airgradient_boot_count",
 			"Same as boot property. Required for Home Assistant compatability. Will be depreciated",
-			nil,
+			[]string{"serialno"},
 			nil,
 		),
 	}, nil
@@ -189,23 +189,23 @@ func (c *airgradientCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	ch <- prometheus.MustNewConstMetric(c.deviceInfoDesc, prometheus.GaugeValue, 1, m.SerialNo, m.Firmware, m.Model, m.LEDMode)
-	ch <- prometheus.MustNewConstMetric(c.wifiDesc, prometheus.GaugeValue, float64(m.Wifi))
-	ch <- prometheus.MustNewConstMetric(c.pm01Desc, prometheus.GaugeValue, float64(m.PM01))
-	ch <- prometheus.MustNewConstMetric(c.pm02Desc, prometheus.GaugeValue, float64(m.PM02))
-	ch <- prometheus.MustNewConstMetric(c.pm10Desc, prometheus.GaugeValue, float64(m.PM10))
-	ch <- prometheus.MustNewConstMetric(c.pm02CompensatedDesc, prometheus.GaugeValue, float64(m.PM02Compensated))
-	ch <- prometheus.MustNewConstMetric(c.rco2Desc, prometheus.GaugeValue, float64(m.RCO2))
-	ch <- prometheus.MustNewConstMetric(c.pm003CountDesc, prometheus.GaugeValue, float64(m.PM003Count))
-	ch <- prometheus.MustNewConstMetric(c.atmpDesc, prometheus.GaugeValue, m.ATMP)
-	ch <- prometheus.MustNewConstMetric(c.atmpCompensatedDesc, prometheus.GaugeValue, m.ATMPCompensated)
-	ch <- prometheus.MustNewConstMetric(c.rhumDesc, prometheus.GaugeValue, float64(m.RHUM))
-	ch <- prometheus.MustNewConstMetric(c.rhumCompensatedDesc, prometheus.GaugeValue, float64(m.RHUMCompensated))
-	ch <- prometheus.MustNewConstMetric(c.tvocIndexDesc, prometheus.GaugeValue, float64(m.TVOCIndex))
-	ch <- prometheus.MustNewConstMetric(c.tvocRawDesc, prometheus.GaugeValue, float64(m.TVOCRaw))
-	ch <- prometheus.MustNewConstMetric(c.noxIndexDesc, prometheus.GaugeValue, float64(m.NOXIndex))
-	ch <- prometheus.MustNewConstMetric(c.noxRawDesc, prometheus.GaugeValue, float64(m.NOXRaw))
-	ch <- prometheus.MustNewConstMetric(c.bootDesc, prometheus.GaugeValue, float64(m.Boot))
-	ch <- prometheus.MustNewConstMetric(c.bootCountDesc, prometheus.GaugeValue, float64(m.BootCount))
+	ch <- prometheus.MustNewConstMetric(c.wifiDesc, prometheus.GaugeValue, float64(m.Wifi), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm01Desc, prometheus.GaugeValue, float64(m.PM01), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm02Desc, prometheus.GaugeValue, float64(m.PM02), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm10Desc, prometheus.GaugeValue, float64(m.PM10), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm02CompensatedDesc, prometheus.GaugeValue, float64(m.PM02Compensated), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.rco2Desc, prometheus.GaugeValue, float64(m.RCO2), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm003CountDesc, prometheus.GaugeValue, float64(m.PM003Count), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.atmpDesc, prometheus.GaugeValue, m.ATMP, m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.atmpCompensatedDesc, prometheus.GaugeValue, m.ATMPCompensated, m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.rhumDesc, prometheus.GaugeValue, float64(m.RHUM), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.rhumCompensatedDesc, prometheus.GaugeValue, float64(m.RHUMCompensated), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.tvocIndexDesc, prometheus.GaugeValue, float64(m.TVOCIndex), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.tvocRawDesc, prometheus.GaugeValue, float64(m.TVOCRaw), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.noxIndexDesc, prometheus.GaugeValue, float64(m.NOXIndex), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.noxRawDesc, prometheus.GaugeValue, float64(m.NOXRaw), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.bootDesc, prometheus.GaugeValue, float64(m.Boot), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.bootCountDesc, prometheus.GaugeValue, float64(m.BootCount), m.SerialNo)
 }
 
 func (c *airgradientCollector) getMeasures(ctx context.Context) (*measures, error) {
