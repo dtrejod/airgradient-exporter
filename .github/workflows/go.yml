@@ -58,8 +58,12 @@ jobs:
       - test
     permissions:
       contents: write
-      packages: write
     if: startsWith(github.ref, 'refs/tags/')
+    strategy:
+      matrix:
+        goos: [linux, darwin, windows]
+        goarch: [amd64, arm64]
+
     steps:
     - uses: actions/checkout@v3
 
@@ -74,30 +78,28 @@ jobs:
       with:
         go-version-file: go.mod
 
-    - name: Build Darwin amd64
-      run: GOOS=darwin GOARCH=amd64 go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./bin/${{ github.event.repository.name }}-amd64-darwin
-
-    - name: Build Darwin arm64
-      run: GOOS=darwin GOARCH=arm64 go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./bin/${{ github.event.repository.name }}-arm64-darwin
-
-    - name: Build Linux amd64
-      run: GOOS=linux GOARCH=amd64 go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./bin/${{ github.event.repository.name }}-amd64-linux
-
-    - name: Build Linux arm64
-      run: GOOS=linux GOARCH=arm64 go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./bin/${{ github.event.repository.name }}-arm64-linux
-
-    - name: Build Windows amd64
-      run: GOOS=windows GOARCH=amd64 go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./bin/${{ github.event.repository.name }}-amd64-windows.exe
+    - name: Build binary
+      run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          ./bin/${{ github.event.repository.name }}-amd64-darwin
-          ./bin/${{ github.event.repository.name }}-arm64-darwin
-          ./bin/${{ github.event.repository.name }}-amd64-linux
-          ./bin/${{ github.event.repository.name }}-arm64-linux
-          ./bin/${{ github.event.repository.name }}-amd64-windows.exe
+        files: ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
+
+  docker-release:
+    runs-on: ubuntu-latest
+    needs: release
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      # The matrix here should be a subset of the matrix in the release job
+      matrix:
+        goos: [linux, darwin]
+        goarch: [amd64, arm64]
+
+    steps:
+    - uses: actions/checkout@v3
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -109,11 +111,22 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build and Push Docker Image
+    - name: Download Binaries
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ github.event.repository.name }}-${{ matrix.goos }}-${{ matrix.goarch }}
+
+    - name: Build and Push Docker Image for Multiple Platforms
       uses: docker/build-push-action@v5
       with:
         context: .
         file: ./Dockerfile
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64,darwin/amd64,darwin/arm64
         push: true
-        tags: ghcr.io/${{ github.repository }}:latest
+        build-args: |
+          BINARY_NAME=${{ github.event.repository.name }}
+          GOOS=${{ matrix.goos }}
+          GOARCH=${{ matrix.goarch }}
+        tags: |
+          ghcr.io/${{ github.repository }}:latest
+          ghcr.io/${{ github.repository }}:${{ github.ref_name }}
