@@ -14,6 +14,9 @@ RUN go build -v -ldflags="-X github.com/dtrejod/airgradient-exporter/version.ver
 # Use SCRATCH base image
 FROM scratch
 
+# Arguments that will be passed from the build command
+ARG VERSION=""
+
 # Set the working directory
 WORKDIR /app
 
