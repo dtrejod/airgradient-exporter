@@ -81,14 +81,6 @@ jobs:
     - name: Build binary
       run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
-        path: ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
-        retention-days: 1
-        if-no-files-found: error
-
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
@@ -98,13 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: release
     permissions:
-      contents: read
       packages: write
-    strategy:
-      # The matrix here should be a subset of the matrix in the release job
-      matrix:
-        goos: [linux]
-        goarch: [amd64, arm64]
 
     steps:
     - uses: actions/checkout@v3
@@ -119,25 +105,15 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Download Binaries
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
-
-    - name: Set Executable permission
-      run: chmod +x ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
-
     - name: Build and Push Docker Image for Multiple Platforms
       uses: docker/build-push-action@v5
       with:
         context: .
         file: ./Dockerfile
         push: true
-        platforms: ${{ matrix.goos }}/${{ matrix.goarch }}
+        platforms: linux/amd64,linux/arm64
         build-args: |
           VERSION=${{ github.ref_name }}
-          GOOS=${{ matrix.goos }}
-          GOARCH=${{ matrix.goarch }}
         tags: |
           ghcr.io/${{ github.repository }}:latest
           ghcr.io/${{ github.repository }}:${{ github.ref_name }}
