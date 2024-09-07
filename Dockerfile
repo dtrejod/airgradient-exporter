@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy your binary into the image
 # Binary build path is referenced from Github workflow
-COPY ./bin/airgradient-exporter-${GOARCH}-${GOOS} /app/airgradient-exporter
+COPY ./airgradient-exporter-${GOARCH}-${GOOS} /app/airgradient-exporter
 
 # Set the ENDPOINT environment variable
 ENV ENDPOINT=""
