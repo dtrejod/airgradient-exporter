@@ -24,7 +24,7 @@ jobs:
         GITHUB_VARS: ${{ toJson(github) }}
 
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version-file: go.mod
 
@@ -74,12 +74,18 @@ jobs:
         GITHUB_VARS: ${{ toJson(github) }}
 
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version-file: go.mod
 
     - name: Build binary
       run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
+        path: ./${{ github.event.repository.name }}-${{ matrix.goos }}-${{ matrix.goarch }}
 
     - name: Release
       uses: softprops/action-gh-release@v1
@@ -112,7 +118,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Download Binaries
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
 
