@@ -18,8 +18,6 @@ Once running, the exporter, by default, will expose the metrics at `:9091/metric
 The exporter is available as a docker image on GitHub Container Registry. You can run the docker image with the
 following docker-compose configuration:
 
-*OS/Arch(s) supported: linux/amd64, linux/arm64, darwin/amd64, darwin/arm64*
-
 ```
 airgradient-exporter:
   image:  ghcr.io/dtrejod/airgradient-exporter:latest
