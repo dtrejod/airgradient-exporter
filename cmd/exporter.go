@@ -9,6 +9,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
@@ -29,6 +30,11 @@ var exporterCmd = &cobra.Command{
 }
 
 func exporterRunFunc(cmd *cobra.Command, args []string) {
+	if endpoint == "" {
+		ilog.FromContext(ctx).Fatal("Missing required '--endpoint' arguement.")
+		os.Exit(1)
+	}
+
 	airgradientCollector, err := collector.NewAirGradient(ctx, endpoint)
 	if err != nil {
 		ilog.FromContext(ctx).Fatal("Failed to create airgradient-exporter.", zap.Error(err))
@@ -49,8 +55,23 @@ func exporterRunFunc(cmd *cobra.Command, args []string) {
 }
 
 func init() {
+	exporterCmd.Flags().StringVar(&endpoint, endpointFlag, "", "AirGradient local-server endpoint. (e.g http://airgradient_<serial-number>.local)")
+	if err := viper.BindPFlag(endpointFlag, exporterCmd.Flags().Lookup(endpointFlag)); err != nil {
+		panic(err)
+	}
+	if err := viper.BindEnv(endpointFlag, "ENDPOINT"); err != nil {
+		panic(err)
+	}
+	endpoint = viper.GetString(endpointFlag)
+
 	exporterCmd.Flags().StringVar(&listenAddr, listenAddrFlag, ":9091", "HTTP port to listen on.")
-	exporterCmd.Flags().StringVar(&endpoint, endpointFlag, "", "AirGradient localserver endpoint. (e.g http://airgradient_<serial-number>.local)")
-	_ = exporterCmd.MarkFlagRequired(endpointFlag)
+	if err := viper.BindPFlag(listenAddrFlag, exporterCmd.Flags().Lookup(listenAddrFlag)); err != nil {
+		panic(err)
+	}
+	if err := viper.BindEnv(listenAddrFlag, "LISTEN_ADDRESS"); err != nil {
+		panic(err)
+	}
+	listenAddr = viper.GetString(listenAddrFlag)
+
 	rootCmd.AddCommand(exporterCmd)
 }

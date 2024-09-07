@@ -9,10 +9,10 @@ WORKDIR /build
 COPY . .
 
 # Build the binary
-RUN go build -v -ldflags="-X github.com/dtrejod/airgradient-exporter/version.version=${VERSION}" -o airgradient-exporter
+RUN CGO_ENABLED=0 go build -v -ldflags="-X github.com/dtrejod/airgradient-exporter/version.version=${VERSION}" -o airgradient-exporter
 
 # Use SCRATCH base image
-FROM scratch
+FROM gcr.io/distroless/static:nonroot
 
 # Arguments that will be passed from the build command
 ARG VERSION=""
@@ -21,7 +21,7 @@ ARG VERSION=""
 WORKDIR /app
 
 # Copy your binary into the image
-COPY --from=build /build/airgradient-exporter /app/airgradient-exporter
+COPY --from=build /build/airgradient-exporter /usr/bin/airgradient-exporter
 
 # Set the default values for user configurable environment variables
 ENV ENDPOINT=""
@@ -31,8 +31,7 @@ ENV LISTEN_ADDRESS=":9091"
 EXPOSE 9091
 
 # Set entrypoint and command
-ENTRYPOINT ["/app/airgradient-exporter"]
-CMD ["exporter", "--endpoint", "${ENDPOINT}", "--listen-address", "${LISTEN_ADDRESS}"]
+ENTRYPOINT ["airgradient-exporter", "exporter"]
 
 # Add common labels
 LABEL org.opencontainers.image.title="AirGradient Exporter" \
