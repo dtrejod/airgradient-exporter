@@ -89,6 +89,8 @@ jobs:
       with:
         name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
         path: ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
+      retention-days: 1
+      if-no-files-found: error
 
     - name: Release
       uses: softprops/action-gh-release@v1
