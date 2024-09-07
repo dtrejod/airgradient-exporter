@@ -23,7 +23,7 @@ WORKDIR /app
 # Copy your binary into the image
 COPY --from=build /build/airgradient-exporter /app/airgradient-exporter
 
-# Set the ENDPOINT environment variable
+# Set the default values for user configurable environment variables
 ENV ENDPOINT=""
 ENV LISTEN_ADDRESS=":9091"
 
