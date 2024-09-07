@@ -23,7 +23,7 @@ CMD ["/app/airgradient-exporter", "exporter", "--endpoint", "${ENDPOINT}"]
 
 # Add common labels
 LABEL org.opencontainers.image.title="AirGradient Exporter" \
-      org.opencontainers.image.description="A prometheus exporter AirGradient." \
+      org.opencontainers.image.description="Prometheus exporter AirGradient ONE" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.source="https://github.com/dtrejod/airgradient-exporter" \
       org.opencontainers.image.licenses="Apache-2.0"
