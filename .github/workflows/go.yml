@@ -93,6 +93,7 @@ jobs:
       contents: read
       packages: write
     strategy:
+      # The matrix here should be a subset of the matrix in the release job
       matrix:
         goos: [linux, darwin]
         goarch: [amd64, arm64]
