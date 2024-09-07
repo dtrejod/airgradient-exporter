@@ -39,6 +39,16 @@ Run the exporter with the following command:
 
 ## Development
 
+The exporter is written in Go. The exporter can be built as a docker image or locally.
+
+### Docker Build
+To build the exporter as a docker image, run the following command:
+
+```bash
+docker build .
+```
+
+### Local Build
 To build the exporter locally, run the following command:
 
 ```bash
