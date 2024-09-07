@@ -6,6 +6,7 @@ import (
 
 	"github.com/dtrejod/airgradient-exporter/internal/collector"
 	"github.com/dtrejod/airgradient-exporter/internal/ilog"
+	"github.com/dtrejod/airgradient-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
@@ -30,6 +31,8 @@ var exporterCmd = &cobra.Command{
 }
 
 func exporterRunFunc(cmd *cobra.Command, args []string) {
+	ilog.FromContext(ctx).Info("Starting airgradient-exporter...", zap.String("version", version.Version()))
+
 	if endpoint == "" {
 		ilog.FromContext(ctx).Fatal("Missing required '--endpoint' arguement.")
 		os.Exit(1)
