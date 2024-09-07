@@ -81,14 +81,13 @@ jobs:
     - name: Build binary
       run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -v -ldflags="-X github.com/${{ github.repository }}/version.version=${{ github.ref_name }}" -o ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
 
-    - name: Set Executable permission
-      run: chmod +x ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
-
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
         path: ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
+        retention-days: 1
+        if-no-files-found: error
 
     - name: Release
       uses: softprops/action-gh-release@v1
@@ -125,12 +124,14 @@ jobs:
       with:
         name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
 
+    - name: Set Executable permission
+      run: chmod +x ./${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
+
     - name: Build and Push Docker Image for Multiple Platforms
       uses: docker/build-push-action@v5
       with:
         context: .
         file: ./Dockerfile
-        platforms: linux/amd64,linux/arm64,darwin/amd64,darwin/arm64
         push: true
         build-args: |
           BINARY_NAME=${{ github.event.repository.name }}
