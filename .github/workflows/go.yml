@@ -114,7 +114,7 @@ jobs:
     - name: Download Binaries
       uses: actions/download-artifact@v3
       with:
-        name: ${{ github.event.repository.name }}-${{ matrix.goos }}-${{ matrix.goarch }}
+        name: ${{ github.event.repository.name }}-${{ matrix.goarch }}-${{ matrix.goos }}
 
     - name: Build and Push Docker Image for Multiple Platforms
       uses: docker/build-push-action@v5
