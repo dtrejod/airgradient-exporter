@@ -133,8 +133,9 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
+        platforms: ${{ matrix.goos }}/${{ matrix.goarch }}
         build-args: |
-          BINARY_NAME=${{ github.event.repository.name }}
+          VERSION=${{ github.ref_name }}
           GOOS=${{ matrix.goos }}
           GOARCH=${{ matrix.goarch }}
         tags: |
