@@ -121,8 +121,8 @@ func NewAirGradient(ctx context.Context, endpoint string) (prometheus.Collector,
 			nil,
 		),
 		bootDesc: prometheus.NewDesc(
-			"airgradient_boot",
-			"The uptime of the device in minutes",
+			"airgradient_boot_total",
+			"The total uptime of the device in minutes",
 			[]string{"serialno"},
 			nil,
 		),
@@ -196,7 +196,7 @@ func (c *airgradientCollector) Collect(ch chan<- prometheus.Metric) {
 	ch <- prometheus.MustNewConstMetric(c.tvocRawDesc, prometheus.GaugeValue, float64(m.TVOCRaw), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.noxIndexDesc, prometheus.GaugeValue, float64(m.NOXIndex), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.noxRawDesc, prometheus.GaugeValue, float64(m.NOXRaw), m.SerialNo)
-	ch <- prometheus.MustNewConstMetric(c.bootDesc, prometheus.GaugeValue, float64(m.Boot), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.bootDesc, prometheus.CounterValue, float64(m.Boot), m.SerialNo)
 }
 
 func (c *airgradientCollector) getMeasures(ctx context.Context) (*measures, error) {
