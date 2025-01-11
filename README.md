@@ -3,7 +3,17 @@
 This is a simple prometheus exporter for the AirGradient air quality monitor. It uses the [AirGradient
 LocalServer API](https://github.com/airgradienthq/arduino/blob/master/docs/local-server.md) to get the data.
 
-**NOTE: Usage of LocalServer API requires the device to be running AirGradient firmware version 3.0.10 or later.**
+## Compatibility
+
+Below is a compatibility matrix for verified versions of the exporter and the AirGradient device firmware.
+
+| AirGradient Firmware | Exporter Version |
+|----------------------|------------------|
+| `x.x.x -> 3.0.9`     | Not Supported    |
+| `3.0.10 -> 3.0.11`   | `>=0.2.0`        |
+| `3.0.12`             | `<=0.3.0`        |
+
+Your mileage may vary with newer versions of the firmware.
 
 ## Usage
 
