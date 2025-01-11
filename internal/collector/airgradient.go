@@ -42,15 +42,45 @@ func NewAirGradient(ctx context.Context, endpoint string) (prometheus.Collector,
 			[]string{"serialno"},
 			nil,
 		),
+		pm01StandardDesc: prometheus.NewDesc(
+			"airgradient_pm01_standard",
+			"PM1 in ug/m3 (standard particle)",
+			[]string{"serialno"},
+			nil,
+		),
+		pm01CountDesc: prometheus.NewDesc(
+			"airgradient_pm01_count",
+			"Particle count 1um per dL",
+			[]string{"serialno"},
+			nil,
+		),
 		pm02Desc: prometheus.NewDesc(
 			"airgradient_pm02",
 			"PM2.5 in ug/m3",
 			[]string{"serialno"},
 			nil,
 		),
+		pm02StandardDesc: prometheus.NewDesc(
+			"airgradient_pm02_standard",
+			"PM2.5 in ug/m3 (standard particle)",
+			[]string{"serialno"},
+			nil,
+		),
+		pm02CountDesc: prometheus.NewDesc(
+			"airgradient_pm02_count",
+			"Particle count 2.5um per dL",
+			[]string{"serialno"},
+			nil,
+		),
 		pm10Desc: prometheus.NewDesc(
 			"airgradient_pm10",
 			"PM10 in ug/m3",
+			[]string{"serialno"},
+			nil,
+		),
+		pm10StandardDesc: prometheus.NewDesc(
+			"airgradient_pm10_standard",
+			"PM10 in ug/m3 (standard particle)",
 			[]string{"serialno"},
 			nil,
 		),
@@ -68,7 +98,25 @@ func NewAirGradient(ctx context.Context, endpoint string) (prometheus.Collector,
 		),
 		pm003CountDesc: prometheus.NewDesc(
 			"airgradient_pm003_count",
-			"Particle count per dL",
+			"Particle count 0.3um per dL",
+			[]string{"serialno"},
+			nil,
+		),
+		pm005CountDesc: prometheus.NewDesc(
+			"airgradient_pm005_count",
+			"Particle count 0.5um per dL",
+			[]string{"serialno"},
+			nil,
+		),
+		pm50CountDesc: prometheus.NewDesc(
+			"airgradient_pm50_count",
+			"Particle count 5um per dL",
+			[]string{"serialno"},
+			nil,
+		),
+		pm10CountDesc: prometheus.NewDesc(
+			"airgradient_pm10_count",
+			"Particle count 10um per dL",
 			[]string{"serialno"},
 			nil,
 		),
@@ -137,11 +185,19 @@ type airgradientCollector struct {
 	deviceInfoDesc      *prometheus.Desc
 	wifiDesc            *prometheus.Desc
 	pm01Desc            *prometheus.Desc
+	pm01StandardDesc    *prometheus.Desc
+	pm01CountDesc       *prometheus.Desc
 	pm02Desc            *prometheus.Desc
+	pm02StandardDesc    *prometheus.Desc
+	pm02CountDesc       *prometheus.Desc
 	pm10Desc            *prometheus.Desc
+	pm10StandardDesc    *prometheus.Desc
 	pm02CompensatedDesc *prometheus.Desc
 	rco2Desc            *prometheus.Desc
 	pm003CountDesc      *prometheus.Desc
+	pm005CountDesc      *prometheus.Desc
+	pm50CountDesc       *prometheus.Desc
+	pm10CountDesc       *prometheus.Desc
 	atmpDesc            *prometheus.Desc
 	atmpCompensatedDesc *prometheus.Desc
 	rhumDesc            *prometheus.Desc
@@ -181,13 +237,21 @@ func (c *airgradientCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	ch <- prometheus.MustNewConstMetric(c.deviceInfoDesc, prometheus.GaugeValue, 1, m.SerialNo, m.Firmware, m.Model, m.LEDMode)
-	ch <- prometheus.MustNewConstMetric(c.wifiDesc, prometheus.GaugeValue, float64(m.Wifi), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.wifiDesc, prometheus.GaugeValue, float64(m.WiFi), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.pm01Desc, prometheus.GaugeValue, float64(m.PM01), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm01StandardDesc, prometheus.GaugeValue, float64(m.PM01Standard), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm01CountDesc, prometheus.GaugeValue, float64(m.PM01Count), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.pm02Desc, prometheus.GaugeValue, float64(m.PM02), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm02StandardDesc, prometheus.GaugeValue, float64(m.PM02Standard), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm02CountDesc, prometheus.GaugeValue, float64(m.PM02Count), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.pm10Desc, prometheus.GaugeValue, float64(m.PM10), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm10StandardDesc, prometheus.GaugeValue, float64(m.PM10Standard), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.pm02CompensatedDesc, prometheus.GaugeValue, float64(m.PM02Compensated), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.rco2Desc, prometheus.GaugeValue, float64(m.RCO2), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.pm003CountDesc, prometheus.GaugeValue, float64(m.PM003Count), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm005CountDesc, prometheus.GaugeValue, float64(m.PM005Count), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm50CountDesc, prometheus.GaugeValue, float64(m.PM50Count), m.SerialNo)
+	ch <- prometheus.MustNewConstMetric(c.pm10CountDesc, prometheus.GaugeValue, float64(m.PM10Count), m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.atmpDesc, prometheus.GaugeValue, m.ATMP, m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.atmpCompensatedDesc, prometheus.GaugeValue, m.ATMPCompensated, m.SerialNo)
 	ch <- prometheus.MustNewConstMetric(c.rhumDesc, prometheus.GaugeValue, float64(m.RHUM), m.SerialNo)
