@@ -27,6 +27,19 @@ resolved by the container. The container does not have access to the mDNS servic
 
 Once running, the exporter, by default, will expose the metrics at `:9091/metrics`.
 
+### HomeKit Integration
+
+The exporter supports running as a HomeKit bridge to expose the AirGradient device as a HomeKit accessory. To enable
+this feature, set the `ENABLE_HOMEKIT=true` environment variable. The exporter will then expose the AirGradient
+device as a HomeKit accessory.
+
+When HomeKit is enabled, disk storage is used to persist the HomeKit state. The exporter by default will create a
+directory `./data` to store the HomeKit state. This directory can be changed by setting the `DATA_DIR`.
+
+To add this bridge, go to your Home app on iOS or macOS, and select "Add Accessory". You will add the accessory
+by selecting "More options..." and selecting "AirGradient Exporter" from the discovered accessories. When pairing the
+device to HomeKit, you will need to use the `PIN` code. The PIN code is `1845-8232`.
+
 ### Docker Image
 The exporter is available as a docker image on GitHub Container Registry. You can run the docker image with the
 following docker-compose configuration:

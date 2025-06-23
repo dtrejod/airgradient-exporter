@@ -4,7 +4,7 @@ const (
 	measuresPath = "/measures/current"
 )
 
-type measures struct {
+type Measures struct {
 	PM01            float64 `json:"pm01"`
 	PM02            float64 `json:"pm02"`
 	PM10            float64 `json:"pm10"`
