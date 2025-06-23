@@ -54,6 +54,7 @@ airgradient-exporter:
   environment:
     - ENDPOINT=<ip of airgradient device>
     - ENABLE_HOMEKIT=true # optional
+    - DATA_DIR=/data # required if ENABLE_HOMEKIT=true is set
   volumes:
     - airgradient-exporter-data:/data # required if ENABLE_HOMEKI=true is set
 ```
