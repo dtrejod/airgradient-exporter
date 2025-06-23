@@ -21,7 +21,11 @@ import (
 const (
 	homekitPairPin = "18458232"
 
-	co2AbnormalThreshold = 800 // ppm
+	// Thresholds for CO2 levels from EPA and AirGradient.
+	// 1000ppm is considered when CO2 may impact health and cognitive function.
+	// REF: https://www.epa.gov/sites/default/files/2014-08/documents/appena.pdf?utm_source=chatgpt.com
+	// REF: https://www.airgradient.com/blog/hidden-health-risks-of-co2/
+	co2AbnormalThreshold = 1000 // ppm
 
 	// Thresholds from EPA. See table "2024 AQI for Fine Particle Pollution" from reference.
 	// REF: https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf
@@ -45,7 +49,7 @@ func NewServer(ctx context.Context, listenAddr, dataDir string, ag *collector.Ai
 	// Create the AirGradient accessory.
 	a, err := newAirgradientAccessory(ctx, ag)
 	if err != nil {
-		return nil, fmt.Errorf("could not create thermometer accessory: %w", err)
+		return nil, fmt.Errorf("could not create airgradient accessory: %w", err)
 	}
 
 	// Store the data in the "./data/db" directory.
