@@ -38,7 +38,7 @@ directory `./data` to store the HomeKit state. This directory can be changed by 
 
 To add this bridge, go to your Home app on iOS or macOS, and select "Add Accessory". You will add the accessory
 by selecting "More options..." and selecting "AirGradient Exporter" from the discovered accessories. When pairing the
-device to HomeKit, you will need to use the `PIN` code. The PIN code is `1845-8232`.
+device to HomeKit, you will need to use the `PIN=1845-8232` code.
 
 ### Docker Image
 The exporter is available as a docker image on GitHub Container Registry. You can run the docker image with the
@@ -53,6 +53,10 @@ airgradient-exporter:
     - "9091:9091"
   environment:
     - ENDPOINT=<ip of airgradient device>
+    - ENABLE_HOMEKIT=true # optional
+    - DATA_DIR=/data # required if ENABLE_HOMEKIT=true is set
+  volumes:
+    - airgradient-exporter-data:/data # required if ENABLE_HOMEKI=true is set
 ```
 
 ### Running Locally
