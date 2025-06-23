@@ -14,13 +14,13 @@ import (
 
 // NewAirGradient creates a new collector for the AirGradient local server API.
 // https://github.com/airgradienthq/arduino/blob/master/docs/local-server.md#local-server-api
-func NewAirGradient(ctx context.Context, endpoint string) (prometheus.Collector, error) {
+func NewAirGradient(ctx context.Context, endpoint string) (*AirgradientCollector, error) {
 	e, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse airgradient endpoint into url: %w", err)
 	}
 
-	return &airgradientCollector{
+	return &AirgradientCollector{
 		ctx:      ctx,
 		client:   &http.Client{},
 		endpoint: e,
@@ -177,7 +177,7 @@ func NewAirGradient(ctx context.Context, endpoint string) (prometheus.Collector,
 	}, nil
 }
 
-type airgradientCollector struct {
+type AirgradientCollector struct {
 	ctx      context.Context
 	client   *http.Client
 	endpoint *url.URL
@@ -209,7 +209,7 @@ type airgradientCollector struct {
 	bootDesc            *prometheus.Desc
 }
 
-func (c *airgradientCollector) Describe(ch chan<- *prometheus.Desc) {
+func (c *AirgradientCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.deviceInfoDesc
 	ch <- c.wifiDesc
 	ch <- c.pm01Desc
@@ -229,8 +229,8 @@ func (c *airgradientCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.bootDesc
 }
 
-func (c *airgradientCollector) Collect(ch chan<- prometheus.Metric) {
-	m, err := c.getMeasures(c.ctx)
+func (c *AirgradientCollector) Collect(ch chan<- prometheus.Metric) {
+	m, err := c.GetMeasures(c.ctx)
 	if err != nil {
 		ilog.FromContext(c.ctx).Error("Failed to get measures.", zap.Error(err))
 		return
@@ -263,7 +263,8 @@ func (c *airgradientCollector) Collect(ch chan<- prometheus.Metric) {
 	ch <- prometheus.MustNewConstMetric(c.bootDesc, prometheus.CounterValue, float64(m.Boot), m.SerialNo)
 }
 
-func (c *airgradientCollector) getMeasures(ctx context.Context) (*measures, error) {
+// GetMeasures fetches the measures from the AirGradient local server API.
+func (c *AirgradientCollector) GetMeasures(ctx context.Context) (*Measures, error) {
 	ilog.FromContext(ctx).Debug("Getting measures from airgradient.")
 	req, err := http.NewRequestWithContext(ctx, "GET", c.endpoint.JoinPath(measuresPath).String(), nil)
 	if err != nil {
@@ -276,7 +277,7 @@ func (c *airgradientCollector) getMeasures(ctx context.Context) (*measures, erro
 	}
 	defer resp.Body.Close()
 
-	var m measures
+	var m Measures
 	if err := json.NewDecoder(resp.Body).Decode(&m); err != nil {
 		return nil, err
 	}
