@@ -100,7 +100,7 @@ func init() {
 	}
 	listenAddr = viper.GetString(listenAddrFlag)
 
-	exporterCmd.Flags().StringVar(&dataDir, dataDirFlag, "./data", "Directory to store data in")
+	exporterCmd.Flags().StringVar(&dataDir, dataDirFlag, "./data", "Directory to store persistent data. Currently only used for HomeKit integration.")
 	if err := viper.BindPFlag(dataDirFlag, exporterCmd.Flags().Lookup(dataDirFlag)); err != nil {
 		panic(err)
 	}
