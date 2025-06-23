@@ -11,8 +11,11 @@ COPY . .
 # Build the binary
 RUN CGO_ENABLED=0 go build -v -ldflags="-X github.com/dtrejod/airgradient-exporter/version.version=${VERSION}" -o airgradient-exporter
 
-# Use SCRATCH base image
-FROM gcr.io/distroless/static:nonroot
+# Use alpine image
+FROM alpine
+
+# Install avahi package for mDNS
+RUN apk add --no-cache avahi
 
 # Arguments that will be passed from the build command
 ARG VERSION=""
