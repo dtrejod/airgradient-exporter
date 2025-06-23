@@ -49,6 +49,7 @@ airgradient-exporter:
   image:  ghcr.io/dtrejod/airgradient-exporter:latest
   container_name: airgradient-exporter
   restart: always
+  network_mode: "host" # Required for mDNS resolution
   ports:
     - "9091:9091"
   environment:
