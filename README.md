@@ -10,8 +10,8 @@ Below is a compatibility matrix for verified versions of the exporter and the Ai
 | AirGradient Firmware | Exporter Version |
 |----------------------|------------------|
 | `x.x.x -> 3.0.9`     | Not Supported    |
-| `3.0.10 -> 3.0.11`   | `>=0.2.0`        |
-| `3.0.12`             | `<=0.3.0`        |
+| `3.0.10 -> 3.0.11`   | `<=0.2.0`        |
+| `>=3.0.12`           | `>=0.3.0`        |
 
 Your mileage may vary with newer versions of the firmware.
 
