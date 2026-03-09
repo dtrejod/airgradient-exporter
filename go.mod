@@ -1,6 +1,6 @@
 module github.com/dtrejod/airgradient-exporter
 
-go 1.24
+go 1.26
 
 require (
 	github.com/brutella/hap v0.0.35
