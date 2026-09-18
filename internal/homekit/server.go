@@ -22,10 +22,12 @@ const (
 	homekitPairPin = "18458232"
 
 	// Thresholds for CO2 levels from EPA and AirGradient.
-	// 1000ppm is considered when CO2 may impact health and cognitive function.
+	// 1000ppm is considered when CO2 may impact health and cognitive function. Use a 1500ppm
+	// for when to trigger abnormal alerts. 
 	// REF: https://www.epa.gov/sites/default/files/2014-08/documents/appena.pdf?utm_source=chatgpt.com
 	// REF: https://www.airgradient.com/blog/hidden-health-risks-of-co2/
-	co2AbnormalThreshold = 1000 // ppm
+	// REF: https://www.airgradient.com/documents/infographics/AQ-Monitor-Cheatsheet.pdf
+	co2AbnormalThreshold = 1500 // ppm
 
 	// Thresholds from EPA. See table "2024 AQI for Fine Particle Pollution" from reference.
 	// REF: https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf
