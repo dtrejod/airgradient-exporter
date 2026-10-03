@@ -25,7 +25,7 @@ type Measures struct {
 	RCO2            float64 `json:"rco2"`
 	TVOCIndex       float64 `json:"tvocIndex"`
 	TVOCRaw         float64 `json:"tvocRaw"`
-	NOXIndex        int     `json:"noxIndex"`
+	NOXIndex        float64 `json:"noxIndex"`
 	NOXRaw          float64 `json:"noxRaw"`
 	Boot            int     `json:"boot"`
 	// Deprecated: BootCount is deprecated in favor of Boot
